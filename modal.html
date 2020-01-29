@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Miro Markdown Export</title>
+  </head>
+  <body>
+    <div class='miro-export-markdown'></div>
+  </body>
+  <script type="text/javascript">
+    miro.onReady(() => {
+      miro.addListener('SELECTION_UPDATED', (e) => {
+        exportSelectionToMarkdown(e.data);
+      })
+      miro.board.selection.get().then(exportSelectionToMarkdown)
+    });
+
+    function Node() {
+      this.text = null;
+      this.parent = null;
+      this.children = [];
+      this.y;
+      this.isLeaf = () => this.children.length == 0;
+      this.isRoot = () => this.parent === null;
+      this.toMarkDown = level => {
+        let markdown = [];
+        let prefix = '#'.repeat(level) + ' ';
+        if (this.isLeaf()) { prefix = '-'.repeat(level - 1); }
+        markdown.push(prefix + this.text);
+        for (let child of this.children.sort((a, b) => a.y - b.y)) {
+          const childMarkdown = child.toMarkDown(level + 1);
+          markdown.push(childMarkdown);
+        }
+        return markdown.join("\n");
+      }
+      this.prettyPrint = () => console.log(this.toMarkDown(1));
+    }
+
+    function exportSelectionToMarkdown(selection) {
+      const nodes = {};
+      for (element of selection) {
+        switch (element.type) {
+          case 'LINE':
+            const childId = element.endWidgetId;
+            if (!(childId in nodes)) nodes[childId] = new Node();
+            const child = nodes[childId];
+            const parentId = element.startWidgetId;
+            if (!(parentId in nodes)) nodes[parentId] = new Node();
+            const parent = nodes[parentId];
+            parent.children.push(child);
+            child.parent = parent;
+            break;
+          case 'STICKER':
+            const nodeId = element.id;
+            if (!(nodeId in nodes)) nodes[nodeId] = new Node();
+            const node = nodes[nodeId];
+            node.text = element.text;
+            node.y = element.y;
+            break;
+        }
+      };
+      const rootNode = Object.values(nodes).find(node => node.isRoot());
+      if (rootNode) rootNode.prettyPrint(1);
+    }
+  </script>
+</html>

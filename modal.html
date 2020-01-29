@@ -6,7 +6,7 @@
     <script src="https://miro.com/app/static/sdk.1.1.js"></script>
   </head>
   <body>
-    <div class='content'>Waiting...</div>
+    <div id='mtm-content'>Waiting...</div>
   </body>
   <script type="text/javascript">
     miro.onReady(() => {
@@ -61,7 +61,7 @@
         }
       };
       const rootNode = Object.values(nodes).find(node => node.isRoot());
-      document.getElementById('content').innerHTML = rootNode.toMarkDown(1);
+      document.getElementById('mtm-content').innerHTML = rootNode.toMarkDown(1);
       rootNode.prettyPrint(1);
     }
   </script>

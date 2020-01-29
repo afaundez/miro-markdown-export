@@ -26,7 +26,7 @@
       this.toMarkDown = level => {
         let markdown = [];
         let prefix = '#'.repeat(level) + ' ';
-        if (this.isLeaf()) { prefix = '-'.repeat(level - 1); }
+        if (this.isLeaf()) { prefix = ' '.repeat(level - 1); }
         markdown.push(prefix + this.text);
         for (let child of this.children.sort((a, b) => a.y - b.y)) {
           const childMarkdown = child.toMarkDown(level + 1);

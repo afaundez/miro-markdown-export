@@ -5,7 +5,7 @@
     <title>Miro Markdown Export</title>
   </head>
   <body>
-    <div class='miro-export-markdown'></div>
+    <div class='content'>Waiting...</div>
   </body>
   <script type="text/javascript">
     miro.onReady(() => {
@@ -60,7 +60,8 @@
         }
       };
       const rootNode = Object.values(nodes).find(node => node.isRoot());
-      if (rootNode) rootNode.prettyPrint(1);
+      document.getElementById('content').innerHTML = rootNode.toMarkDown(1);
+      rootNode.prettyPrint(1);
     }
   </script>
 </html>

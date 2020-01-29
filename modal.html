@@ -34,7 +34,6 @@
         }
         return markdown.join("\n");
       }
-      this.prettyPrint = () => console.log(this.toMarkDown(1));
     }
 
     function exportSelectionToMarkdown(selection) {
@@ -62,7 +61,6 @@
       };
       const rootNode = Object.values(nodes).find(node => node.isRoot());
       document.getElementById('mtm-content').innerHTML = rootNode.toMarkDown(1);
-      rootNode.prettyPrint(1);
     }
   </script>
 </html>
